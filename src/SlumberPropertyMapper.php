@@ -50,7 +50,12 @@ class SlumberPropertyMapper extends DefaultPropertyMapper
 
         $config = $this->reader->getEntityConfig($property->getDeclaringClass());
 
-        $slumberProperty = $config->getMarkedPropertyByName($property->getName());
+        $slumberProperty = $config->getMarkedPropertyByName($property->name);
+
+        if ($slumberProperty === null) {
+            throw new \RuntimeException("Could not get Slumber property {$property->class->name}::{$property->name}");
+        }
+
         $slumberMarker   = $slumberProperty->marker;
 
         return new Property(
@@ -118,13 +123,13 @@ class SlumberPropertyMapper extends DefaultPropertyMapper
         if ($marker instanceof Slumber\AsMap) {
             return Type::map(
                 Type::string()->ref(),
-                $this->mapType($builder, $marker->value) // $slumberMarker->value being IPropertyMappingMarker is invariant
+                $this->mapType($builder, $marker->getValue()) // $slumberMarker->value being IPropertyMappingMarker is invariant
             )->ref();
         }
 
         if ($marker instanceof Slumber\AsList) {
             return Type::list_(
-                $this->mapType($builder, $marker->value) // $slumberMarker->value being IPropertyMappingMarker is invariant
+                $this->mapType($builder, $marker->getValue()) // $slumberMarker->value being IPropertyMappingMarker is invariant
             )->ref();
         }
 
@@ -132,7 +137,7 @@ class SlumberPropertyMapper extends DefaultPropertyMapper
         if ($marker instanceof Slumber\AsCollection) {
             return Type::map(
                 Type::string()->ref(),
-                $this->mapType($builder, $marker->value) // $slumberMarker->value being IPropertyMappingMarker is invariant
+                $this->mapType($builder, $marker->getValue()) // $slumberMarker->value being IPropertyMappingMarker is invariant
             )->ref();
         }
 

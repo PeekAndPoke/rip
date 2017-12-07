@@ -10,11 +10,12 @@ use Doctrine\Common\Annotations\Reader;
 use PeekAndPoke\Component\MetaCore\Builder;
 use PeekAndPoke\Component\MetaCore\DomainModel as MetaCore;
 use PeekAndPoke\Component\MetaCore\DomainModel\Type;
-use PeekAndPoke\Component\Psi\Functions\Unary\Matcher\IsInstanceOf;
 use PeekAndPoke\Component\Psi\Psi;
+use PeekAndPoke\Component\Psi\Psi\IsInstanceOf;
 use PeekAndPoke\Component\Rip\DomainModel\Endpoint;
 use PeekAndPoke\Component\Rip\DomainModel\Swagger2;
 use PeekAndPoke\Component\Slumber\Core\Codec\ArrayCodec;
+use PeekAndPoke\Component\Slumber\Core\LookUp\EntityConfigReader;
 
 
 /**
@@ -35,10 +36,11 @@ class Rip
     /**
      * Rip constructor.
      *
-     * @param ArrayCodec $codec
-     * @param Reader     $annotationReader
+     * @param EntityConfigReader $configReader
+     * @param ArrayCodec         $codec
+     * @param Reader             $annotationReader
      */
-    public function __construct(ArrayCodec $codec, Reader $annotationReader)
+    public function __construct(EntityConfigReader $configReader, ArrayCodec $codec, Reader $annotationReader)
     {
         $this->codec            = $codec;
         $this->annotationReader = $annotationReader;
@@ -47,8 +49,8 @@ class Rip
         // from Slumber annotations, like the real type of an array (List vs Map)
         $this->metaCoreBuilder = new Builder(
             $annotationReader,
-            new SlumberPropertyFilter($codec->getEntityConfigReader()),
-            new SlumberPropertyMapper($codec->getEntityConfigReader())
+            new SlumberPropertyFilter($configReader),
+            new SlumberPropertyMapper($configReader)
         );
     }
 
