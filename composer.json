@@ -12,10 +12,10 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.1",
-        "peekandpoke/metacore": "^0.6.0"
+        "peekandpoke/metacore": "~0.6.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.1",
+        "phpunit/phpunit": "^6.5.5",
         "roave/security-advisories": "dev-master"
     },
     "autoload": {
